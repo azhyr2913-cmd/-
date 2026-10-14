@@ -1,0 +1,168 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Admin role check: authorized emails
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'azhyr2913@gmail.com' ||
+        request.auth.token.email == 'alswdnyahmd281@gmail.com' ||
+        request.auth.token.email == 'zhyralswdanyahmdly@gmail.com'
+      );
+    }
+
+    // Health / Connectivity Check
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // Settings Collection (App config, WhatsApp, announcements)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Categories Collection
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Admins Collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Stores Collection
+    match /stores/{storeId} {
+      allow read: if true;
+      allow create: if isSignedIn() && (incoming().ownerId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && (
+        existing().ownerId == request.auth.uid ||
+        incoming().diff(existing()).affectedKeys().hasOnly(['rating', 'ratingsCount', 'ordersCount']) ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Store Applications
+    match /store_applications/{applicationId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && incoming().ownerId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // Products Collection
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isSignedIn() && (incoming().ownerId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && (
+        existing().ownerId == request.auth.uid ||
+        incoming().diff(existing()).affectedKeys().hasOnly(['viewsCount', 'likesCount', 'ordersCount', 'quantity', 'isSold', 'isAvailable', 'updatedAt']) ||
+        isAdmin()
+      );
+      allow delete: if isSignedIn() && (existing().ownerId == request.auth.uid || isAdmin());
+    }
+
+    // Orders Collection
+    match /orders/{orderId} {
+      allow read: if isSignedIn() && (
+        resource.data.buyerId == request.auth.uid ||
+        resource.data.storeOwnerId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isSignedIn() && incoming().buyerId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        existing().storeOwnerId == request.auth.uid ||
+        existing().buyerId == request.auth.uid ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Chats Collection
+    match /chats/{chatId} {
+      allow read: if true;
+      allow create: if isSignedIn() && (
+        incoming().buyerId == request.auth.uid ||
+        incoming().storeOwnerId == request.auth.uid ||
+        chatId.matches('^chat_' + request.auth.uid + '_.*') ||
+        isAdmin()
+      );
+      allow update: if isSignedIn() && (
+        resource == null ||
+        resource.data.buyerId == request.auth.uid ||
+        resource.data.storeOwnerId == request.auth.uid ||
+        chatId.matches('^chat_' + request.auth.uid + '_.*') ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+
+      // Messages Subcollection
+      match /messages/{messageId} {
+        allow read: if true;
+        allow create: if isSignedIn();
+        allow update: if isSignedIn();
+        allow delete: if isAdmin();
+      }
+    }
+
+    // Favorites Collection
+    match /favorites/{favoriteId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+    }
+
+    // Likes Collection
+    match /likes/{likeId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+    }
+
+    // Follows Collection
+    match /follows/{followId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow delete: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+    }
+
+    // Notifications Collection
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && existing().userId == request.auth.uid;
+      allow delete: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+    }
+
+    // Store Reviews Collection (تقييمات المتاجر)
+    match /store_reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid;
+      allow delete: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+    }
+  }
+}

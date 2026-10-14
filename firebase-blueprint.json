@@ -1,0 +1,323 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile in Rawaq marketplace",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["buyer", "merchant", "admin"], "maxLength": 20 },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "storeId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "role", "createdAt"]
+    },
+    "Store": {
+      "title": "Store",
+      "description": "Public store profile in Rawaq marketplace",
+      "type": "object",
+      "properties": {
+        "storeId": { "type": "string", "maxLength": 128 },
+        "ownerId": { "type": "string", "maxLength": 128 },
+        "storeName": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "logoUrl": { "type": "string", "maxLength": 500 },
+        "bannerUrl": { "type": "string", "maxLength": 500 },
+        "backgroundTheme": { "type": "string", "maxLength": 50 },
+        "productTypes": { "type": "string", "maxLength": 200 },
+        "city": { "type": "string", "maxLength": 100 },
+        "isVerified": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["active", "suspended"], "maxLength": 20 },
+        "isOpen": { "type": "boolean" },
+        "businessHours": { "type": "string", "maxLength": 300 },
+        "deliveryFee": { "type": "number" },
+        "followersCount": { "type": "number" },
+        "productsCount": { "type": "number" },
+        "ordersCount": { "type": "number" },
+        "rating": { "type": "number" },
+        "ratingsCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["storeId", "ownerId", "storeName", "city", "status", "createdAt"]
+    },
+    "StoreApplication": {
+      "title": "StoreApplication",
+      "description": "Registration application to open a store in Rawaq",
+      "type": "object",
+      "properties": {
+        "applicationId": { "type": "string", "maxLength": 128 },
+        "ownerId": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "storeName": { "type": "string", "maxLength": 100 },
+        "storefrontImageUrl": { "type": "string", "maxLength": 500 },
+        "productTypes": { "type": "string", "maxLength": 200 },
+        "city": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "maxLength": 20 },
+        "rejectionReason": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "reviewedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["applicationId", "ownerId", "fullName", "phone", "storeName", "city", "status", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Product listed in Rawaq marketplace",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "maxLength": 128 },
+        "storeId": { "type": "string", "maxLength": 128 },
+        "storeName": { "type": "string", "maxLength": 100 },
+        "ownerId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 2500 },
+        "price": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "categoryId": { "type": "string", "maxLength": 100 },
+        "condition": { "type": "string", "enum": ["new", "used"], "maxLength": 20 },
+        "quantity": { "type": "number" },
+        "city": { "type": "string", "maxLength": 100 },
+        "isAvailable": { "type": "boolean" },
+        "isSold": { "type": "boolean" },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "additionalImages": { "type": "string", "maxLength": 2000 },
+        "viewsCount": { "type": "number" },
+        "likesCount": { "type": "number" },
+        "ordersCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "storeId", "ownerId", "title", "price", "categoryId", "city", "createdAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product category in Rawaq marketplace",
+      "type": "object",
+      "properties": {
+        "categoryId": { "type": "string", "maxLength": 100 },
+        "name": { "type": "string", "maxLength": 100 },
+        "slug": { "type": "string", "maxLength": 100 },
+        "icon": { "type": "string", "maxLength": 50 },
+        "sortOrder": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "description": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["categoryId", "name", "sortOrder", "isActive"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer purchase order in Rawaq",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "maxLength": 128 },
+        "buyerId": { "type": "string", "maxLength": 128 },
+        "buyerName": { "type": "string", "maxLength": 120 },
+        "buyerPhone": { "type": "string", "maxLength": 30 },
+        "storeId": { "type": "string", "maxLength": 128 },
+        "storeName": { "type": "string", "maxLength": 100 },
+        "storeOwnerId": { "type": "string", "maxLength": 128 },
+        "items": { "type": "string", "maxLength": 4000 },
+        "subtotal": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "total": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": ["new", "pending_confirmation", "accepted", "preparing", "out_for_delivery", "completed", "cancelled", "rejected"],
+          "maxLength": 30
+        },
+        "deliveryAddress": { "type": "string", "maxLength": 500 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "city": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderId", "buyerId", "storeId", "total", "status", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "Conversation between buyer and store owner",
+      "type": "object",
+      "properties": {
+        "chatId": { "type": "string", "maxLength": 128 },
+        "buyerId": { "type": "string", "maxLength": 128 },
+        "buyerName": { "type": "string", "maxLength": 120 },
+        "storeId": { "type": "string", "maxLength": 128 },
+        "storeName": { "type": "string", "maxLength": 100 },
+        "storeOwnerId": { "type": "string", "maxLength": 128 },
+        "productId": { "type": "string", "maxLength": 128 },
+        "productTitle": { "type": "string", "maxLength": 150 },
+        "lastMessageText": { "type": "string", "maxLength": 1000 },
+        "lastMessageTimestamp": { "type": "string", "format": "date-time" },
+        "unreadCountBuyer": { "type": "number" },
+        "unreadCountSeller": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["chatId", "buyerId", "storeId", "storeOwnerId", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Direct message in a chat",
+      "type": "object",
+      "properties": {
+        "messageId": { "type": "string", "maxLength": 128 },
+        "chatId": { "type": "string", "maxLength": 128 },
+        "senderId": { "type": "string", "maxLength": 128 },
+        "senderName": { "type": "string", "maxLength": 120 },
+        "text": { "type": "string", "maxLength": 2000 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["messageId", "chatId", "senderId", "text", "createdAt"]
+    },
+    "Favorite": {
+      "title": "Favorite",
+      "description": "Buyer saved favorite product",
+      "type": "object",
+      "properties": {
+        "favoriteId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "productId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["favoriteId", "userId", "productId", "createdAt"]
+    },
+    "Like": {
+      "title": "Like",
+      "description": "User like on a product",
+      "type": "object",
+      "properties": {
+        "likeId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "productId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["likeId", "userId", "productId", "createdAt"]
+    },
+    "Follow": {
+      "title": "Follow",
+      "description": "User follow of a store",
+      "type": "object",
+      "properties": {
+        "followId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "storeId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["followId", "userId", "storeId", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app notification for order updates, approvals, messages",
+      "type": "object",
+      "properties": {
+        "notificationId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 150 },
+        "body": { "type": "string", "maxLength": 500 },
+        "type": { "type": "string", "maxLength": 50 },
+        "linkUrl": { "type": "string", "maxLength": 300 },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["notificationId", "userId", "title", "body", "createdAt"]
+    },
+    "AppSetting": {
+      "title": "AppSetting",
+      "description": "Global application configuration editable by developer",
+      "type": "object",
+      "properties": {
+        "settingId": { "type": "string", "maxLength": 100 },
+        "developerWhatsapp": { "type": "string", "maxLength": 30 },
+        "supportedCities": { "type": "string", "maxLength": 1000 },
+        "announcement": { "type": "string", "maxLength": 500 },
+        "maintenanceMode": { "type": "boolean" },
+        "updatedBy": { "type": "string", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["settingId", "developerWhatsapp"]
+    },
+    "StoreReview": {
+      "title": "StoreReview",
+      "description": "Customer rating and review for a store",
+      "type": "object",
+      "properties": {
+        "reviewId": { "type": "string", "maxLength": 128 },
+        "storeId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userAvatar": { "type": "string", "maxLength": 500 },
+        "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+        "comment": { "type": "string", "maxLength": 1000 },
+        "interactionType": { "type": "string", "enum": ["purchase", "chat", "general"], "maxLength": 20 },
+        "orderId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["reviewId", "storeId", "userId", "userName", "rating", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User public/basic profile information"
+    },
+    "/stores/{storeId}": {
+      "schema": { "$ref": "#/entities/Store" },
+      "description": "Public store profiles with hidden private phone"
+    },
+    "/store_applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/StoreApplication" },
+      "description": "Store opening applications for developer review"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Product listings created by verified stores"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Marketplace categories manageable by developer"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Marketplace orders between buyers and store owners"
+    },
+    "/chats/{chatId}": {
+      "schema": { "$ref": "#/entities/Chat" },
+      "description": "Direct conversation channel between buyer and store"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Messages inside a conversation"
+    },
+    "/favorites/{favoriteId}": {
+      "schema": { "$ref": "#/entities/Favorite" },
+      "description": "User saved favorites"
+    },
+    "/likes/{likeId}": {
+      "schema": { "$ref": "#/entities/Like" },
+      "description": "Product likes"
+    },
+    "/follows/{followId}": {
+      "schema": { "$ref": "#/entities/Follow" },
+      "description": "Store followers list"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "User notifications"
+    },
+    "/store_reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/StoreReview" },
+      "description": "Customer ratings and reviews for stores"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/AppSetting" },
+      "description": "System wide configuration and developer whatsapp"
+    }
+  }
+}

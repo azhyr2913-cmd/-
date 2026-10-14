@@ -1,0 +1,6 @@
+{
+  "name": "رواق | Rawaq",
+  "description": "حراج وسوق بيحان المفتوح للسيارات، العقارات، الأجهزة، والمواشي وكافة السلع المحلية في شبوة، اليمن.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
